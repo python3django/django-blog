@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 from taggit.managers import TaggableManager
+#from django.utils.text import slugify
+from uuslug import slugify # slugify из библеотеки django-uuslug делает транслитерацию кирилици в латиницу
 
 
 class PublishedManager(models.Manager):
@@ -35,6 +37,13 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog:post_detail', args=[self.publish.year, self.publish.month, self.publish.day, self.slug])
+   
+    # создаем slug из title, в случае если пост создан через интерфейс сайта (а не через админку)
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            #self.slug = slugify(self.title, allow_unicode=True)
+            self.slug = slugify(self.title)
+        super(Post, self).save(*args, **kwargs)
 
 
 class Comment(models.Model): 

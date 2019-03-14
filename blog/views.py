@@ -1,23 +1,21 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
 from .models import Post, Comment
 from taggit.models import Tag
 from django.db.models import Count
-from .forms import EmailPostForm, CommentForm, SearchForm
+from .forms import EmailPostForm, CommentForm, SearchForm, PostForm
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
-#from django.contrib.postgres.search import TrigramSimilarity
 
 
 def post_list(request, tag_slug=None): 
     object_list = Post.published.all() 
-    tag = None 
- 
+    tag = None     
     if tag_slug: 
         tag = get_object_or_404(Tag, slug=tag_slug) 
         object_list = object_list.filter(tags__in=[tag]) 
- 
+    
     paginator = Paginator(object_list, 3) # 3 сообщения на каждой странице 
     page = request.GET.get('page') 
     try: 
@@ -28,24 +26,22 @@ def post_list(request, tag_slug=None):
     except EmptyPage: 
         # Если страница за пределами допустимого диапазона перемещаемся на последнюю страницу 
         posts = paginator.page(paginator.num_pages) 
-    return render(request, 'blog/post/list.html', {'page': page, 'posts': posts, 'tag': tag}) 
 
+    form_post = None
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form_post = PostForm(request.POST)
+            if form_post.is_valid():
+                cd = form_post.cleaned_data
+                new_post = form_post.save(commit=False)
+                new_post.author = request.user
+                new_post.status = 'published'              
+                new_post.save()
+                return redirect('blog:post_list')
+        else:
+            form_post = PostForm()
+    return render(request, 'blog/post/list.html', {'page': page, 'posts': posts, 'tag': tag, 'form_post': form_post}) 
 
-"""
-class PostListView(ListView):
-    queryset = Post.published.all()
-    context_object_name = 'posts'
-    paginate_by = 2
-    template_name = 'blog/post/list.html'
-"""
-
-
-
-"""
-def post_detail(request, year, month, day, post):
-    post = get_object_or_404(Post, slug=post, status='published', publish__year=year, publish__month=month, publish__day=day)
-    return render(request, 'blog/post/detail.html', {'post': post})
-"""
 
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(Post, slug=post, status='published', publish__year=year, publish__month=month, publish__day=day)

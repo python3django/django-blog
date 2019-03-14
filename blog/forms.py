@@ -1,5 +1,5 @@
 from django import forms
-from .models import Comment
+from .models import Comment, Post
 
  
 class EmailPostForm(forms.Form):
@@ -17,3 +17,12 @@ class CommentForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     query = forms.CharField()
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('title', 'body')
+        widgets = {'title': forms.TextInput(attrs={'size': 60}), 'body': forms.Textarea(attrs={'rows':4, 'cols':70}),}
+        labels = {'title': 'Post title', 'body': 'Post text', }
+

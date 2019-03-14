@@ -31,5 +31,17 @@
     {{ post.body|markdown|truncatewords_html:30 }}  
   {% endfor %}
   {% include "pagination.html" with page=posts %}
+
+  <div style="clear: both">
+   {% if request.user.is_authenticated %}
+     <h3>Add new blog post</h3>
+     <form action="." method="post">
+       {{ form_post.as_p }}
+       {% csrf_token %}
+       <p><input type="submit" value="Save"></p>
+     </form>
+   {% endif %}
+  </div>
+
 {% endblock %}
 
