@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.sitemaps',
     'django.contrib.postgres',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +148,10 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'account.authentication.EmailAuthBackend',
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES':  ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
