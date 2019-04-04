@@ -3,6 +3,8 @@ from blog.models import Post, Comment
 from blog.api.serializers import PostSerializer, CommentSerializer
 from rest_framework import permissions 
 from blog.api import custompermission 
+from rest_framework.response import Response 
+from rest_framework.reverse import reverse
 
 
 class PostListView(generics.ListCreateAPIView):
@@ -35,3 +37,12 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CommentSerializer
     name = 'comment-detail'
 
+
+
+class ApiRoot(generics.GenericAPIView): 
+    name = 'api-root' 
+    def get(self, request, *args, **kwargs): 
+        return Response({ 
+            'posts': reverse(PostListView.name, request=request),
+            'comments': reverse(CommentListView.name, request=request), 
+            }) 
