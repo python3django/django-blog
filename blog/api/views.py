@@ -13,7 +13,13 @@ class PostListView(generics.ListCreateAPIView):
     name = 'post-list'
     permission_classes = ( 
         permissions.IsAuthenticatedOrReadOnly,
+        #permissions.DjangoModelPermissionsOrAnonReadOnly,
         )
+    
+    def perform_create(self, serializer):
+        # переопределяем метод чтобы автором поста сохранить того кто его создал,
+        # не зависимо от полученных данных
+        serializer.save(author=self.request.user)            
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
