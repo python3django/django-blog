@@ -5,9 +5,12 @@ from rest_framework import permissions
 from blog.api import custompermission 
 from rest_framework.response import Response 
 from rest_framework.reverse import reverse
+from rest_framework.throttling import ScopedRateThrottle 
 
 
 class PostListView(generics.ListCreateAPIView):
+    throttle_scope = 'posts' 
+    throttle_classes = (ScopedRateThrottle,)
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     name = 'post-list'
@@ -23,6 +26,8 @@ class PostListView(generics.ListCreateAPIView):
 
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+    throttle_scope = 'posts' 
+    throttle_classes = (ScopedRateThrottle,)
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     name = 'post-detail'
@@ -33,16 +38,27 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CommentListView(generics.ListCreateAPIView):
+    throttle_scope = 'comments' 
+    throttle_classes = (ScopedRateThrottle,)
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     name = 'comment-list'
 
+    def perform_create(self, serializer):
+        # переопределяем метод чтобы добавить ссылку на пост,
+        # к которому относится данный комментарий
+        serializer.save(post_id=serializer.initial_data['post_id'])
+
 
 class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    throttle_scope = 'comments' 
+    throttle_classes = (ScopedRateThrottle,)
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     name = 'comment-detail'
-
+    permission_classes = ( 
+        custompermission.IsAdminUserOrReadOnly, 
+        )
 
 
 class ApiRoot(generics.GenericAPIView): 
