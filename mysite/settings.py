@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.postgres',
     'rest_framework',
+    'django_filters', 
 ]
 
 MIDDLEWARE = [
@@ -167,6 +168,11 @@ REST_FRAMEWORK = {
         'user': '20/hour',
         'posts': '20/hour',
         'comments': '20/hour', 
-    } 
+    },
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend', 
+        'rest_framework.filters.OrderingFilter', 
+        'rest_framework.filters.SearchFilter', 
+        ), 
 }
 

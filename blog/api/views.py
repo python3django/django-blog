@@ -6,6 +6,8 @@ from blog.api import custompermission
 from rest_framework.response import Response 
 from rest_framework.reverse import reverse
 from rest_framework.throttling import ScopedRateThrottle 
+from rest_framework import filters 
+from django_filters import AllValuesFilter, DateTimeFilter, NumberFilter 
 
 
 class PostListView(generics.ListCreateAPIView):
@@ -14,16 +16,18 @@ class PostListView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     name = 'post-list'
+    filter_fields = ('title', 'author',) 
+    search_fields = ('title', 'body',) 
+    ordering_fields = ('title', 'created', 'status',) 
     permission_classes = ( 
         permissions.IsAuthenticatedOrReadOnly,
-        #permissions.DjangoModelPermissionsOrAnonReadOnly,
         )
     
     def perform_create(self, serializer):
         # переопределяем метод чтобы автором поста сохранить того кто его создал,
         # не зависимо от полученных данных
-        serializer.save(author=self.request.user)            
-
+        serializer.save(author=self.request.user)              
+    
 
 class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     throttle_scope = 'posts' 
@@ -43,6 +47,9 @@ class CommentListView(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     name = 'comment-list'
+    filter_fields = ('name', 'email',) 
+    search_fields = ('body',) 
+    ordering_fields = ('created',) 
 
     def perform_create(self, serializer):
         # переопределяем метод чтобы добавить ссылку на пост,
