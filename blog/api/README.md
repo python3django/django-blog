@@ -57,8 +57,8 @@ http ":8000/api/posts/?search=django&ordering=created"
 Фильтрация по полям 'name' и 'email', поиск по 'body', сортировка по 'created':  
 http ":8000/api/comments/?name=Oleg&search=nuclear&ordering=-created"
 
-### Для users/  
-http "127.0.0.1:8000/api/users/?search=A&ordering=-id" "Authorization: Token 65fc5108dee0d130d508a04748c8e914cf863f64"  
+#### Для users/  
+http "127.0.0.1:8000/api/users/?search=A&ordering=-id" "Authorization: Token PASTE-TOKEN-HERE"  
 
 ### Пагинация выдает по 4 объекта.
 
