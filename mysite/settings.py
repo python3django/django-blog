@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'django.contrib.postgres',
     'rest_framework',
-    'django_filters', 
+    'django_filters',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -167,7 +168,8 @@ REST_FRAMEWORK = {
         'anon': '10/hour', 
         'user': '20/hour',
         'posts': '20/hour',
-        'comments': '20/hour', 
+        'comments': '20/hour',
+        'users': '20/hour', 
     },
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend', 

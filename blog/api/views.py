@@ -1,6 +1,6 @@
 from rest_framework import generics
 from blog.models import Post, Comment
-from blog.api.serializers import PostSerializer, CommentSerializer
+from blog.api.serializers import PostSerializer, CommentSerializer, UserSerializer
 from rest_framework import permissions 
 from blog.api import custompermission 
 from rest_framework.response import Response 
@@ -8,6 +8,8 @@ from rest_framework.reverse import reverse
 from rest_framework.throttling import ScopedRateThrottle 
 from rest_framework import filters 
 from django_filters import AllValuesFilter, DateTimeFilter, NumberFilter 
+from django.contrib.auth.models import User
+from rest_framework.authentication import TokenAuthentication
 
 
 class PostListView(generics.ListCreateAPIView):
@@ -35,9 +37,8 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     name = 'post-detail'
-    permission_classes = ( 
-        permissions.IsAuthenticatedOrReadOnly,
-        custompermission.IsCurrentUserAuthorOrReadOnly, 
+    permission_classes = (
+        custompermission.IsCurrentUserAuthorOrAdminUserOrReadOnly,
         )
 
 
@@ -68,10 +69,41 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
         )
 
 
+class UserListView(generics.ListAPIView):
+    throttle_scope = 'users' 
+    throttle_classes = (ScopedRateThrottle,)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    name = 'user-list'
+    filter_fields = ('username', 'email', 'groups',) 
+    search_fields = ('username', 'first_name',) 
+    ordering_fields = ('id', 'username', 'first_name',)        
+    authentication_classes = (
+        TokenAuthentication,
+        )
+    permission_classes = (
+        permissions.IsAuthenticated,
+        )
+
+class UserDetailView(generics.RetrieveAPIView):
+    throttle_scope = 'users' 
+    throttle_classes = (ScopedRateThrottle,)
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    name = 'user-detail'
+    authentication_classes = (
+        TokenAuthentication,
+        )
+    permission_classes = (
+        permissions.IsAuthenticated,
+        )
+
+
 class ApiRoot(generics.GenericAPIView): 
     name = 'api-root' 
     def get(self, request, *args, **kwargs): 
         return Response({ 
             'posts': reverse(PostListView.name, request=request),
-            'comments': reverse(CommentListView.name, request=request), 
+            'comments': reverse(CommentListView.name, request=request),
+            'users': reverse(UserListView.name, request=request),
             }) 
