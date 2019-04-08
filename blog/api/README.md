@@ -19,9 +19,6 @@ http POST 127.0.0.1:8000/api/comments/ body="Test text" name="Bob" post_id="66" 
 Изменить существующий комментарий:  
 http --auth admin:password PUT 127.0.0.1:8000/api/comments/35/ body="Edited text comment." name="Bob" post_id="66" email="test@gmail.com"
    
-Изменить существующий комментарий:  
-http --auth admin:password PUT 127.0.0.1:8000/api/comments/35/ body="Edited text comment." name="Bob" post_id="66" email="test@gmail.com"
-
 Пример запросов к users/:  
 http 127.0.0.1:8000/api/users/ "Authorization: Token 65fc5108dee0d130d508a04748c8e914cf863f64"  
 http 127.0.0.1:8000/api/users/2/ "Authorization: Token 65fc5108dee0d130d508a04748c8e914cf863f64"
