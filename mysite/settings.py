@@ -86,11 +86,11 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blog2',
-        'USER': 'blog',
+        'NAME': 'blog3',
+        'USER': 'blog3',
         'PASSWORD': '09051945',
-        'HOST': '127.0.0.1',  
-        'PORT': '5432', 
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -154,27 +154,26 @@ AUTHENTICATION_BACKENDS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication', 
-        'rest_framework.authentication.SessionAuthentication', 
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     #'DEFAULT_PERMISSION_CLASSES':  ['rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 4,
-    'DEFAULT_THROTTLE_CLASSES': ( 
-        'rest_framework.throttling.AnonRateThrottle', 
-        'rest_framework.throttling.UserRateThrottle', 
-    ), 
-    'DEFAULT_THROTTLE_RATES': { 
-        'anon': '10/hour', 
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '10/hour',
         'user': '20/hour',
         'posts': '20/hour',
         'comments': '20/hour',
-        'users': '20/hour', 
+        'users': '20/hour',
     },
     'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend', 
-        'rest_framework.filters.OrderingFilter', 
-        'rest_framework.filters.SearchFilter', 
-        ), 
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+        'rest_framework.filters.SearchFilter',
+        ),
 }
-

@@ -7,6 +7,7 @@ Markdown==3.0.1
 Pillow==5.4.1
 pkg-resources==0.0.0
 psycopg2==2.7.7
+psycopg2-binary==2.8.6
 python-slugify==3.0.0
 pytz==2018.9
 text-unidecode==1.2
