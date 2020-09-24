@@ -1,4 +1,4 @@
-# Блог на Django.
+# Django Blog.
 ---
 
 ## English
